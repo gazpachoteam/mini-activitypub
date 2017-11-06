@@ -1,4 +1,4 @@
-# Un twitter libre y distribuido
+# Hanatachi
 
  > Mini implementación de ActivityPub en Ruby
 
