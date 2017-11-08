@@ -9,18 +9,18 @@ def every(seconds)
   end
 end
 
-def render_state
+def render_state(actor, inbox, outbox)
   system 'clear'
-  puts "usuario: @#{USER_NAME}@http://localhost:#{PORT}".green
-  puts "# INBOX (#{$INBOX.count})"
-  $INBOX.each do |activity|
-    puts "#{activity.actor.id} => #{activity.object.content}".blue
+  puts "usuario: #{actor.id}".green
+  puts "# INBOX (#{inbox.count})"
+  inbox.each do |activity|
+    puts "#{activity.actor.id} says: #{activity.object.content}".blue
   end
   puts '-' * 40
 
-  puts "# OUTBOX (#{$OUTBOX.count})"
-  $OUTBOX.each do |activity|
-    puts "=> #{activity.object.content}".yellow
+  puts "# OUTBOX (#{outbox.count})"
+  outbox.each do |activity|
+    puts "#{activity.object.content}".yellow
   end
   puts '-' * 40
 end
