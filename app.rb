@@ -1,32 +1,49 @@
 require 'sinatra'
+require "sinatra/activerecord"
 require 'colorize'
 require 'active_support/time'
 require_relative 'helpers'
 require_relative 'lib/activitypub'
 
-PORT, USER_NAME = ARGV.first(2)
-set :port, PORT
+require "./models.rb"
 
-actor = ActivityPub::Person.new(
-  id: "http://localhost:#{PORT}/@#{USER_NAME}",
-  name: USER_NAME,
-  inbox: "http://localhost:#{PORT}/inbox",
-  outbox: "http://localhost:#{PORT}/outbox",
-  followers: "http://localhost:#{PORT}/followers/",
-  following: "http://localhost:#{PORT}/following/",
-  likes: "http://localhost:#{PORT}/likes/"
-)
+#PORT, USER_NAME = ARGV.first(2)
+#set :port, PORT
+set :database, "sqlite3:hanatachidb.sqlite3"
 
-inbox = ThreadSafe::Array.new
-outbox = ThreadSafe::Array.new
+#actor = ActivityPub::Person.new(
+#  id: "http://localhost:#{PORT}/@#{USER_NAME}",
+#  name: USER_NAME,
+#  inbox: "http://localhost:#{PORT}/inbox",
+#  outbox: "http://localhost:#{PORT}/outbox",
+#  followers: "http://localhost:#{PORT}/followers/",
+#  following: "http://localhost:#{PORT}/following/",
+#  likes: "http://localhost:#{PORT}/likes/"
+#)
 
-every(3.seconds) do
-  render_state(actor, inbox, outbox)
+#inbox = ThreadSafe::Array.new
+#outbox = ThreadSafe::Array.new
+
+#every(3.seconds) do
+#  render_state(actor, inbox, outbox)
+#end
+
+before do
+  content_type 'application/json'
 end
 
-# @param user_name
-get '/@:user_name' do
-  return 'UserNotFound' if params[:user_name] != USER_NAME
+# @param username
+get '/@:username' do
+  person = Person.find_by_username!(params[:username])
+  actor = ActivityPub::Person.new(
+    id: "http://localhost:#{settings.port}/@#{person.username}",
+    name: person.username,
+    inbox: "http://localhost:#{settings.port}/@#{person.username}/inbox",
+    outbox: "http://localhost:#{settings.port}/@#{person.username}/outbox",
+    followers: "http://localhost:#{settings.port}/@#{person.username}/followers/",
+    following: "http://localhost:#{settings.port}/@#{person.username}/following/",
+    likes: "http://localhost:#{settings.port}/@#{person.username}/likes/"
+  )
   actor.to_json
 end
 
