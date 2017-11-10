@@ -7,9 +7,7 @@ require_relative 'lib/activitypub'
 
 require "./models.rb"
 
-#PORT, USER_NAME = ARGV.first(2)
-#set :port, PORT
-set :database, "sqlite3:hanatachidb.sqlite3"
+set :database_file, 'config/database.yml'
 
 #actor = ActivityPub::Person.new(
 #  id: "http://localhost:#{PORT}/@#{USER_NAME}",
@@ -29,22 +27,13 @@ set :database, "sqlite3:hanatachidb.sqlite3"
 #end
 
 before do
-  content_type 'application/json'
+  #content_type 'application/json'
 end
 
 # @param username
 get '/@:username' do
   person = Person.find_by_username!(params[:username])
-  actor = ActivityPub::Person.new(
-    id: "http://localhost:#{settings.port}/@#{person.username}",
-    name: person.username,
-    inbox: "http://localhost:#{settings.port}/@#{person.username}/inbox",
-    outbox: "http://localhost:#{settings.port}/@#{person.username}/outbox",
-    followers: "http://localhost:#{settings.port}/@#{person.username}/followers/",
-    following: "http://localhost:#{settings.port}/@#{person.username}/following/",
-    likes: "http://localhost:#{settings.port}/@#{person.username}/likes/"
-  )
-  actor.to_json
+  person.ap_json
 end
 
 # @param body
@@ -54,12 +43,13 @@ end
 # =>  "attributedTo": "https://social.example/alyssa/",
 # =>  "content": "Say, did you finish reading that book I lent you?"
 # => }
-post '/outbox' do
+post '/@:username/outbox' do
+  person = Person.find_by_username!(params[:username])
   data = JSON.parse(request.body.read)
-  activity = ActivityPub::Activity.factory(data, actor)
-  outbox << activity
+  activity = ActivityPub::Activity.factory(data, person.ap_json)
+  activity = person.save_activity(activity)
   activity.delivery
-  "OK. Actividad agregada al outbox de #{actor.name}!"
+  "Activity para el delivery #{activity.to_json}!"
 end
 
 # @param body
@@ -74,8 +64,10 @@ end
 # =>             "to": ["https://chatty.example/ben/"],
 # =>             "content": "Say, did you finish reading that book I lent you?"}
 # => }
-post '/inbox' do
+post '/@:username/inbox' do
+  recipient = Person.find_by_username!(params[:username])
   data = JSON.parse(request.body.read)
   activity = ActivityPub::Activity.factory(data)
-  inbox << activity
+  person = Person.get_or_create_person(activity)
+  person.save_remote_activity(activity)
 end

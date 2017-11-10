@@ -11,7 +11,8 @@ module ActivityPub
 
     def self.factory(json, actor = nil)
       if actor.nil?
-        actor = ActivityPub::Person.new(json['actor'].deep_symbolize_keys)
+        actor = JSON.parse(json['actor'])
+        actor = ActivityPub::Person.new(actor.deep_symbolize_keys)
       end
 
       if json['type'] == 'Note'
