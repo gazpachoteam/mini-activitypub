@@ -12,9 +12,22 @@
 
 ActiveRecord::Schema.define(version: 20171109152947) do
 
-  create_table "notes", force: :cascade do |t|
-    t.text "content"
+  create_table "activities", force: :cascade do |t|
     t.string "uri"
+    t.bigint "object_id"
+    t.string "object_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "hidden", default: false, null: false
+    t.bigint "person_id"
+    t.index ["person_id"], name: "index_stream_entries_on_account_id"
+    t.index [nil, nil], name: "index_stream_entries_on_activity_id_and_activity_type"
+  end
+
+  create_table "articles", force: :cascade do |t|
+    t.string "uri"
+    t.string "title"
+    t.text "content"
     t.integer "person_id"
     t.boolean "local"
     t.datetime "created_at", null: false
@@ -26,17 +39,6 @@ ActiveRecord::Schema.define(version: 20171109152947) do
     t.string "domain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "stream_entries", force: :cascade do |t|
-    t.bigint "activity_id"
-    t.string "activity_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "hidden", default: false, null: false
-    t.bigint "person_id"
-    t.index ["activity_id", "activity_type"], name: "index_stream_entries_on_activity_id_and_activity_type"
-    t.index ["person_id"], name: "index_stream_entries_on_account_id"
   end
 
 end

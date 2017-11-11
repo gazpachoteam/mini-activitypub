@@ -1,21 +1,24 @@
-require 'byebug'
 class Person < ActiveRecord::Base
-  has_many :notes
-  has_many :stream_entries, inverse_of: :person, dependent: :destroy
+  has_many :articles
+  has_many :activities, inverse_of: :person, dependent: :destroy
 
   def local?
     domain.nil?
   end
 
   def save_activity(activity)
-    byebug
     case activity.type.to_s
     when 'Create'
-      note = notes.create!(
-        content: activity.object.content
-      )
-      activity.object.id = note.uri
-      activity
+      case activity.object.type.to_s
+      when 'Article'
+        article = articles.create!(
+          content: activity.object.content
+        )
+        activity.object.id = article.uri
+        activity
+      else
+        # code
+      end
     when 'Follow'
     else
     end
@@ -25,12 +28,17 @@ class Person < ActiveRecord::Base
   def save_remote_activity(activity)
     case activity.type.to_s
     when 'Create'
-      note = Note.find_by_uri(activity.object.id.to_s)
-      if note.nil?
-        note = notes.create!(
-          content: activity.object.content,
-          uri: activity.object.id.to_s
-        )
+      case activity.object.type.to_s
+      when 'Article'
+        article = Article.find_by_uri(activity.object.id.to_s)
+        if article.nil?
+          article = articles.create!(
+            content: activity.object.content,
+            uri: activity.object.id.to_s
+          )
+        end
+      else
+        # code
       end
     when 'Follow'
     else
@@ -63,19 +71,19 @@ class Person < ActiveRecord::Base
   end
 end
 
-class Note < ActiveRecord::Base
+class Article < ActiveRecord::Base
   belongs_to :person
-  has_one :stream_entry, as: :activity
+  has_one :activity, as: :object
 
   before_validation :set_local
 
   after_create do
-    person.stream_entries.create!(activity: self) if needs_stream_entry?
+    person.activities.create!(object: self) if needs_activity_entry?
   end
 
-  after_create_commit :store_uri, if: :local?
+  after_create_commit :store_uri
 
-  def needs_stream_entry?
+  def needs_activity_entry?
     person.local?
   end
 
@@ -90,14 +98,20 @@ class Note < ActiveRecord::Base
   end
 end
 
-class StreamEntry < ActiveRecord::Base
+class Activity < ActiveRecord::Base
 
-  belongs_to :person, inverse_of: :stream_entries
-  belongs_to :activity, polymorphic: true
-  belongs_to :notes, foreign_type: 'Notes', foreign_key: 'activity_id', inverse_of: :stream_entry
+  belongs_to :person, inverse_of: :activities
+  belongs_to :object, polymorphic: true
+  belongs_to :articles, foreign_type: 'Articles', foreign_key: 'object_id', inverse_of: :activity
 
-  validates :person, :activity, presence: true
+  validates :person, :object, presence: true
 
   scope :recent, -> { reorder(id: :desc) }
 
+  after_create_commit :store_uri
+
+  private
+  def store_uri
+    update_attribute(:uri, "http://localhost:#{Sinatra::Application.settings.port}/activities/#{id}") if uri.nil?
+  end
 end
