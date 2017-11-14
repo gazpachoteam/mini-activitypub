@@ -5,7 +5,12 @@ require 'active_support/time'
 require_relative 'helpers'
 require_relative 'lib/activitypub'
 
-require "./models.rb"
+
+# Models
+Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each do |file|
+  require_relative file
+end
+
 
 set :database_file, 'config/database.yml'
 
@@ -27,29 +32,94 @@ set :database_file, 'config/database.yml'
 #end
 
 before do
-  #content_type 'application/json'
+  content_type 'application/json'
 end
 
 # @param username
 get '/@:username' do
-  person = Person.find_by_username!(params[:username])
+  person = Person.find_by_username(params[:username])
+  halt(404, { message:'Person Not Found'}.to_json) unless person
   person.ap_json
 end
 
 # @param body
 # => {"@context": "https://www.w3.org/ns/activitystreams",
-# =>  "type": "Note",
+# =>  "type": "Article",
 # =>  "to": ["https://chatty.example/ben/"],
 # =>  "attributedTo": "https://social.example/alyssa/",
 # =>  "content": "Say, did you finish reading that book I lent you?"
 # => }
 post '/@:username/outbox' do
   person = Person.find_by_username!(params[:username])
-  data = JSON.parse(request.body.read)
-  activity = ActivityPub::Activity.factory(data, person.ap_json)
-  activity = person.save_activity(activity)
+  json = request.body.read
+
+  return status 400 if json.empty?
+
+  data = JSON.parse json
+
+  if data['type'] == 'Article'
+
+    activity = {}
+    activity['object'] = data
+    activity['actor'] = JSON.parse person.ap_json
+    activity['published'] = Time.now.utc
+
+    activity = ActivityPub::Activity::Create.new(
+      activity.to_json,
+      person
+    )
+  end
+
+  if data['type'] == 'Person'
+
+    activity = {}
+    activity['object'] = data
+    activity['actor'] = JSON.parse person.ap_json
+    activity['published'] = Time.now.utc
+
+    activity = ActivityPub::Activity::Follow.new(
+      activity.to_json,
+      person
+    )
+  end
+
+  return status 400 unless activity
+
+  if activity.type.to_s == 'Create'
+    if activity.object.type.to_s == 'Article'
+      article = person.articles.create!(
+        title: activity.object.name,
+        content: activity.object.content
+      )
+      activity.id = article.activity.uri
+      activity.object.id = article.uri
+      activity
+    else
+      return status 400 # bad request
+    end
+  elsif activity.type.to_s == 'Follow'
+    if ActivityPub::Helper.local_uri? activity.object.id.to_s
+      # path_params = Rails.application.routes.recognize_path(uri)
+      # Investigate how to make the same but in sintra
+      target_person = Person.find_by_username!(activity.object.name)
+    else
+      target_person = Person.get_or_create_person(activity.object)
+    end
+
+    # Already following?
+    return if person.following?(target_person)
+
+    follow = Follow.create!(person: person, target_person: target_person)
+    activity.id = follow.activity.uri
+    activity.object.to << target_person.uri if !ActivityPub::Helper.local_uri? activity.object.id.to_s
+  else
+    return status 400
+  end
+
   activity.delivery
-  "Activity para el delivery #{activity.to_json}!"
+
+  headers["Location"] = activity.id.to_s
+  status 201 # Created
 end
 
 # @param body
@@ -66,8 +136,10 @@ end
 # => }
 post '/@:username/inbox' do
   recipient = Person.find_by_username!(params[:username])
-  data = JSON.parse(request.body.read)
-  activity = ActivityPub::Activity.factory(data)
-  person = Person.get_or_create_person(activity)
-  person.save_remote_activity(activity)
+  json = request.body.read
+
+  return status 400 if json.empty?
+
+  activity = ActivityPub::Activity.factory(json, recipient)
+  activity.perform
 end

@@ -2,8 +2,10 @@ class CreateActivities < ActiveRecord::Migration[5.1]
   def change
     create_table :activities, force: :cascade do |t|
       t.string :uri
+      t.string :action
       t.bigint :object_id
       t.string :object_type
+      t.boolean :local      
       t.datetime :created_at, null: false
       t.datetime :updated_at, null: false
       t.boolean :hidden, default: false, null: false

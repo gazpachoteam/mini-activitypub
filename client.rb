@@ -6,9 +6,10 @@ class Client
     @user_id = id
   end
 
-  def publish(status, recipients)
-    status = ActivityStreams::Object::Note.new(
-      content: status,
+  def publish(title = '', content ='', recipients)
+    article = ActivityStreams::Object::Article.new(
+      name: title,
+      content: content,
       to: recipients
     )
 
@@ -16,7 +17,21 @@ class Client
 
     Faraday.post(
       "#{outbox}",
-      status.to_json
+      article.to_json
+    ).body
+  end
+
+  def follow(target_user_id = '')
+    return 'Target user id is required' if target_user_id.nil?
+
+    data = JSON.parse ActivityPub::Helper.get_actor(target_user_id).to_json
+    person = ActivityPub::Person.new(data.deep_symbolize_keys)
+
+    outbox = ActivityPub::Helper.get_actor(@user_id).outbox
+
+    Faraday.post(
+      "#{outbox}",
+      person.to_json
     ).body
   end
 end

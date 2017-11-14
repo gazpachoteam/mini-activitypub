@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171109152947) do
+ActiveRecord::Schema.define(version: 20171111215755) do
 
   create_table "activities", force: :cascade do |t|
     t.string "uri"
+    t.string "action"
     t.bigint "object_id"
     t.string "object_type"
+    t.boolean "local"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false, null: false
@@ -30,6 +32,21 @@ ActiveRecord::Schema.define(version: 20171109152947) do
     t.text "content"
     t.integer "person_id"
     t.boolean "local"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "attention_requests", force: :cascade do |t|
+    t.integer "person_id"
+    t.integer "from_person_id"
+    t.integer "activity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "follows", force: :cascade do |t|
+    t.integer "person_id"
+    t.integer "target_person_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
