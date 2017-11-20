@@ -1,7 +1,23 @@
 # Hanatachi
 
- > Mini implementación de ActivityPub en Ruby
+Hanatachi is a **free, open-source social network server** for **federated blogging** based on the ActivityPub open web protocol.
 
- ActivityPub es el estandar de la web social federada. Este protocolo nos permite dar vida a una red distribuida de nodos donde sus usuarios independientemente del servidor o la instalación en la que están registrados pueden interactuar e intercambiar mensajes. Una red que dada su estructura distribuida es mucho más resiliente y liberadora que los grandes silos centralizadores como Twitter o Facebook.
+## Configuration for development and test environments
 
- Durante esta charla montaremos desde cero una mini implementación básica de ActivityPub. En el proceso nos familiarizaremos con los componentes y requerimientos básicos para la implementación de este protocolo en cualquier proyecto web que estés desarrollando.
+Prerequisites: install git, Ruby 2.4.2, bundler gem, and MySQL (5.7.5+).
+
+```bash
+git clone https://github.com/ortegacmanuel/hanatachi.git
+cd hanatachi
+bundle install
+cp config/database.yml.example config/database.yml
+cp config/secrets.yml.example config/secrets.yml
+bin/rake db:create
+bin/rake db:migrate
+```
+
+Run the app locally:
+
+```
+bin/rails s
+```
