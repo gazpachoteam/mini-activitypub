@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Hanatachi</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title><%= @page_title %></title>
     <%= csrf_meta_tags %>
+
+    <meta name="keywords" content="activitypub, federated blogging, federated social web">
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
   <body>
-    <%= yield %>
+    <%= render 'shared/nav' %>
+    <%= render 'shared/header' %>
+
+    <div class="container">
+      <div class="row">
+        <%= yield %>
+        <%= render 'shared/sidebar' %>
+      </div>
+    </div>
+    <%= render 'shared/footer' %>
   </body>
 </html>
