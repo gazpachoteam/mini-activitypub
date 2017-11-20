@@ -1,6 +1,5 @@
 default: &default
   adapter: mysql2
-  encoding: unicode
   host: localhost
   pool: 5
   username:
