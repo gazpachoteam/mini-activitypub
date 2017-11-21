@@ -16,6 +16,13 @@
     <%= render 'shared/header' %>
 
     <div class="container">
+
+      <!-- Devise flash messages-->
+      <% if notice || alert %>
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      <% end %>
+
       <div class="row">
         <%= yield %>
         <%= render 'shared/sidebar' %>
