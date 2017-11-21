@@ -24,7 +24,9 @@
       <% end %>
 
       <div class="row">
-        <%= yield %>
+        <div class="col-sm-8 blog-main">
+          <%= yield %>
+        </div>
         <%= render 'shared/sidebar' %>
       </div>
     </div>
