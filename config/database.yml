@@ -1,0 +1,26 @@
+default: &default
+  adapter: mysql2
+  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: <%= ENV['DB_NAME'] || 'hanatachi_development' %>
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASS'] %>
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: <%= ENV['DB_NAME'] || 'hanatachi' %>_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASS'] %>
+
+production:
+  <<: *default
+  database: <%= ENV['DB_NAME'] || 'hanatachi_production' %>
+  username: <%= ENV['DB_USER'] || 'hanatachi' %>
+  password: <%= ENV['DB_PASS'] || '' %>
+  host: <%= ENV['DB_HOST'] || 'localhost' %>

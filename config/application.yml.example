@@ -1,0 +1,16 @@
+development:
+  DB_NAME:
+  DB_USER:
+  DB_PASS:
+
+test:
+  DB_NAME:
+  DB_USER:
+  DB_PASS:
+
+production:
+  DB_NAME:
+  DB_USER:
+  DB_PASS:
+
+  SECRET_KEY_BASE:
