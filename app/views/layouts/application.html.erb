@@ -24,10 +24,14 @@
       <% end %>
 
       <div class="row">
-        <div class="col-sm-8 blog-main">
-          <%= yield %>
-        </div>
-        <%= render 'shared/sidebar' %>
+        <% if content_for?(:main) %>
+          <%= yield(:main) %>
+        <% else %>
+          <div class="col-sm-8 blog-main">
+            <%= yield %>
+          </div>
+          <%= render 'shared/sidebar' %>
+        <% end %>
       </div>
     </div>
     <%= render 'shared/footer' %>

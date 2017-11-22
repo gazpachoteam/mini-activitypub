@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171121075548) do
+ActiveRecord::Schema.define(version: 20171121180339) do
 
   create_table "accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "username", default: "", null: false
@@ -26,11 +26,43 @@ ActiveRecord::Schema.define(version: 20171121075548) do
     t.string "outbox_url", default: "", null: false
     t.string "shared_inbox_url", default: "", null: false
     t.string "followers_url", default: "", null: false
+    t.datetime "last_webfingered_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["uri"], name: "index_accounts_on_uri"
     t.index ["url"], name: "index_accounts_on_url"
     t.index ["username", "domain"], name: "index_accounts_on_username_and_domain", unique: true
+  end
+
+  create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "uri"
+    t.string "action"
+    t.bigint "object_id"
+    t.string "object_type"
+    t.boolean "local"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "hidden", default: false, null: false
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_stream_entries_on_account_id"
+    t.index ["object_id", "object_type"], name: "index_stream_entries_on_object_id_and_object_type"
+  end
+
+  create_table "articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "title"
+    t.text "content"
+    t.string "uri"
+    t.integer "account_id"
+    t.boolean "local"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "id"], name: "index_articles_on_account_id_id"
+    t.index ["uri"], name: "index_articles_on_uri", unique: true
+  end
+
+  create_table "follows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

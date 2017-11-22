@@ -1,0 +1,13 @@
+<% content_for :main do %>
+  <div class="col-sm-5 blog-main">
+    <h2>Subscribe to</h2>
+    <%= form_tag(follows_search_path, method: "get") do %>
+      <%= hidden_field_tag 'resolve', 'true' %>
+      <div class="form-group">
+        <%= text_field_tag(:q, @q, class: 'form-control') %>
+      </div>
+      <%= submit_tag("Search") %>
+    <% end %>
+  </div>
+  <%= render 'shared/subscriptions' %>
+<% end %>

@@ -2,10 +2,9 @@
   <div class="container">
     <nav class="nav blog-nav">
       <%= link_to "Home", root_path, class: 'nav-link active' %>
-      <a class="nav-link" href="#">New features</a>
-      <a class="nav-link" href="#">Press</a>
-      <a class="nav-link" href="#">New hires</a>
-      <a class="nav-link" href="#">About</a>
+      <% if can? :manage, Follow %>
+        <%= link_to "Subscriptions", follows_path, class: 'nav-link' %>
+      <% end %>
       <%= login_helper 'nav-link' %>
     </nav>
   </div>

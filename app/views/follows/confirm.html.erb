@@ -1,0 +1,19 @@
+<% content_for :main do %>
+  <div class="col-sm-6 blog-main confirm-user-profile">
+    <h2>Your are going to subscribe to</h2>
+    <div class="light profile-sidebar-portlet bordered">
+        <div class="profile-userpic text-center">
+            <img src="<%= asset_path 'hanatachi_avatar.png' %>" class="img-responsive" alt=""> </div>
+        <div class="profile-usertitle">
+            <div class="profile-usertitle-name"><%= @account.display_name %></div>
+            <div class="profile-usertitle-job"><%= @account.url %></div>
+        </div>
+        <div>
+          <%= @account.note.html_safe %>
+        </div>
+        <div class="profile-userbuttons">
+            <button type="button" class="btn btn-info  btn-block">Confrim</button>
+        </div>
+    </div>
+  </div>
+<% end %>
