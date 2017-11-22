@@ -6,13 +6,16 @@
             <img src="<%= asset_path 'hanatachi_avatar.png' %>" class="img-responsive" alt=""> </div>
         <div class="profile-usertitle">
             <div class="profile-usertitle-name"><%= @account.display_name %></div>
-            <div class="profile-usertitle-job"><%= @account.url %></div>
+            <div class="profile-usertitle-job">@<%= @account.acct %></div>
         </div>
         <div>
-          <%= @account.note.html_safe %>
+          <%= @account.note.html_safe unless @account.note.nil? %>
         </div>
         <div class="profile-userbuttons">
-            <button type="button" class="btn btn-info  btn-block">Confrim</button>
+            <%= form_tag(follows_path, method: "post") do %>
+              <%= hidden_field_tag :uri, @account.acct %>
+              <%= submit_tag 'Confirm', class: 'btn btn-info  btn-block' %>
+            <% end %>
         </div>
     </div>
   </div>

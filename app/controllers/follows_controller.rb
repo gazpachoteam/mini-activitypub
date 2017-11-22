@@ -1,7 +1,8 @@
 class FollowsController < ApplicationController
   RESULTS_LIMIT = 1
 
-  load_and_authorize_resource
+  load_resource except: :create
+  authorize_resource
 
   def index
   end
@@ -20,6 +21,27 @@ class FollowsController < ApplicationController
 
     @account = results[:accounts].first
     render 'confirm'
+  end
+
+  def create
+    raise ActiveRecord::RecordNotFound if follow_params[:uri].blank?
+
+    @account = FollowService.new.call(current_user.account, target_uri).try(:target_account)
+
+    if @account.nil?
+      username, domain = target_uri.split('@')
+      @account         = Account.find_remote!(username, domain)
+    end
+  end
+
+  private
+
+  def target_uri
+    follow_params[:uri].strip.gsub(/\A@/, '')
+  end
+
+  def follow_params
+    params.permit(:uri)
   end
 
   def resolving_search?

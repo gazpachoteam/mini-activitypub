@@ -145,6 +145,8 @@ GEM
     popper_js (1.12.5)
     public_suffix (3.0.1)
     puma (3.10.0)
+    rabl (0.13.1)
+      activesupport (>= 2.3.14)
     rack (2.0.3)
     rack-test (0.7.1)
       rack (>= 1.0, < 3)
@@ -251,6 +253,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.18, < 0.5)
   oj (~> 3.3)
   puma (~> 3.7)
+  rabl (~> 0.13)
   rails (~> 5.1.4)
   sass-rails (~> 5.0)
   selenium-webdriver

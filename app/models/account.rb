@@ -35,6 +35,10 @@ class Account < ApplicationRecord
     "#{username}@#{Rails.configuration.x.local_domain}"
   end
 
+  def to_webfinger_s
+    "acct:#{local_username_and_domain}"
+  end  
+
   def keypair
     @keypair ||= OpenSSL::PKey::RSA.new(private_key || public_key)
   end

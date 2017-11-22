@@ -4,6 +4,13 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  get '/@:username', to: 'accounts#show', as: :short_account
+  resources :accounts
+
+  # Webfinger
+  get '.well-known/host-meta', to: 'well_known/host_meta#show', as: :host_meta, defaults: { format: 'xml' }
+  get '.well-known/webfinger', to: 'well_known/webfinger#show', as: :webfinger
+
   get 'home/index'
 
   get 'follows/search'
