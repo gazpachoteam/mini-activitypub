@@ -2,7 +2,6 @@ require 'sinatra'
 require "sinatra/activerecord"
 require 'colorize'
 require 'active_support/time'
-require_relative 'helpers'
 require_relative 'lib/activitypub'
 
 
@@ -12,6 +11,7 @@ Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each do |file|
 end
 
 set :database_file, 'config/database.yml'
+set :public_folder, 'public'
 
 before do
   content_type 'application/json'
@@ -124,4 +124,10 @@ post '/@:username/inbox' do
 
   activity = ActivityPub::Activity.factory(json, recipient)
   activity.perform
+end
+
+
+get '/:username/dashboard' do
+  content_type 'text/html'
+  erb :index
 end
