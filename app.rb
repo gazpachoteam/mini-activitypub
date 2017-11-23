@@ -11,25 +11,7 @@ Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each do |file|
   require_relative file
 end
 
-
 set :database_file, 'config/database.yml'
-
-#actor = ActivityPub::Person.new(
-#  id: "http://localhost:#{PORT}/@#{USER_NAME}",
-#  name: USER_NAME,
-#  inbox: "http://localhost:#{PORT}/inbox",
-#  outbox: "http://localhost:#{PORT}/outbox",
-#  followers: "http://localhost:#{PORT}/followers/",
-#  following: "http://localhost:#{PORT}/following/",
-#  likes: "http://localhost:#{PORT}/likes/"
-#)
-
-#inbox = ThreadSafe::Array.new
-#outbox = ThreadSafe::Array.new
-
-#every(3.seconds) do
-#  render_state(actor, inbox, outbox)
-#end
 
 before do
   content_type 'application/json'
