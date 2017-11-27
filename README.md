@@ -1,5 +1,7 @@
 # Hanatachi
 
+![Miniactivitypub](https://raw.githubusercontent.com/ortegacmanuel/hanatachi/miniactivitypub/miniactivitypub.png)
+
  > Mini implementación de ActivityPub en Ruby
 
  ActivityPub es el estandar de la web social federada. Este protocolo nos permite dar vida a una red distribuida de nodos donde sus usuarios independientemente del servidor o la instalación en la que están registrados pueden interactuar e intercambiar mensajes. Una red que dada su estructura distribuida es mucho más resiliente y liberadora que los grandes silos centralizadores como Twitter o Facebook.
@@ -9,7 +11,7 @@
  # Getting started
 
  ```
- https://github.com/ortegacmanuel/hanatachi.git
+ git clone https://github.com/ortegacmanuel/hanatachi.git
  cd hanatachi
  git checkout miniactivitypub
  bundle install
@@ -31,36 +33,31 @@ In other terminal start pry and load the client class
 
 ```
  pry
-pry(main)> require_relative 'client'
-=> true
+require_relative 'client'
 ```
 Create the bob's client
 
 ```
-pry(main)> bob = Client.new('http://localhost:1111/@bob')
-=> #<Client:0x005584e39f09f8 @user_id="http://localhost:1111/@bob">
+bob = Client.new('http://localhost:1111/@bob')
 ```
 
 Create the alice's client
 
 ```
-[3] pry(main)> alice = Client.new('http://localhost:2222/@alice')
-=> #<Client:0x005584e3a8f850 @user_id="http://localhost:2222/@alice">
+alice = Client.new('http://localhost:2222/@alice')
 ```
 
 Alicie sends a message to Bob
 
 ```
-[4] pry(main)> alice.publish('hola, ¿Vamos al cine esta noche?', [bob.user_id])
-=> "OK. Actividad agregada al outbox de alice!"
+alice.publish('hola, ¿Vamos al cine esta noche?', [bob.user_id])
 ```
 
 Bob responds to Alice
 
 
 ```
-pry(main)> bob.publish('claro!, cuenta conmigo!', [alice.user_id])
-=> "OK. Actividad agregada al outbox de bob!"
+bob.publish('claro!, cuenta conmigo!', [alice.user_id])
 ```
 
 In the server's terminals you can see the state of Bob's and Alice's inboxes and outboxes
