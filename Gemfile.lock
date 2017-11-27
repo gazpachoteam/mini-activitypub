@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/ortegacmanuel/activitystreams.git
-  revision: 1c0d6c5a463de5b9ce4582b66cea4ee2728af0c8
+  revision: 62a9cae12b56c95cb22249678f96998f24f6bf29
   specs:
-    activitystreams (0.0.5)
+    activitystreams (0.0.4)
       activesupport (>= 2.3)
       addressable
       attr_required (>= 0.0.5)
@@ -24,13 +24,13 @@ GEM
     concurrent-ruby (1.0.5)
     faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
-    i18n (0.9.0)
+    i18n (0.9.1)
       concurrent-ruby (~> 1.0)
     json (2.1.0)
     minitest (5.10.3)
     multipart-post (2.0.0)
     mustermann (1.0.1)
-    public_suffix (3.0.0)
+    public_suffix (3.0.1)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
