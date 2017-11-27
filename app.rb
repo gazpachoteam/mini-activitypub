@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'sinatra'
 require 'colorize'
 require 'active_support/time'

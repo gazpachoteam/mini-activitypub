@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/ortegacmanuel/activitystreams.git
-  revision: 62a9cae12b56c95cb22249678f96998f24f6bf29
+  revision: 009e775d72dd613b321b3f875e945ff87df35061
+  branch: activitystreams2
   specs:
     activitystreams (0.0.4)
       activesupport (>= 2.3)
