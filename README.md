@@ -32,7 +32,7 @@
 In other terminal start pry and load the client class
 
 ```
- pry
+pry
 require_relative 'client'
 ```
 Create the bob's client
