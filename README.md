@@ -43,15 +43,20 @@ pry(main)> bob = Client.new('http://localhost:1111/@bob')
 
 Create the alice's client
 
+```
 [3] pry(main)> alice = Client.new('http://localhost:2222/@alice')
 => #<Client:0x005584e3a8f850 @user_id="http://localhost:2222/@alice">
+```
 
 Alicie sends a message to Bob
 
+```
 [4] pry(main)> alice.publish('hola, ¿Vamos al cine esta noche?', [bob.user_id])
 => "OK. Actividad agregada al outbox de alice!"
+```
 
 Bob responds to Alice
+
 
 ```
 pry(main)> bob.publish('claro!, cuenta conmigo!', [alice.user_id])
