@@ -2,6 +2,8 @@ require_relative 'lib/activitypub'
 require 'faraday'
 
 class Client
+  attr_reader :user_id
+
   def initialize(id)
     @user_id = id
   end

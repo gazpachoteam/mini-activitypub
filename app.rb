@@ -24,8 +24,10 @@ every(3.seconds) do
   render_state(actor, inbox, outbox)
 end
 
+# example: http://localhost:1111/@bob
 # @param user_name
 get '/@:user_name' do
+  content_type :json
   return 'UserNotFound' if params[:user_name] != USER_NAME
   actor.to_json
 end
@@ -41,7 +43,7 @@ post '/outbox' do
   data = JSON.parse(request.body.read)
   activity = ActivityPub::Activity.factory(data, actor)
   outbox << activity
-  activity.delivery
+  activity.delivery # envía una petición post a los destinatarios
   "OK. Actividad agregada al outbox de #{actor.name}!"
 end
 
