@@ -61,3 +61,8 @@ gem 'activitystreams', git: 'https://github.com/ortegacmanuel/activitystreams.gi
 gem 'goldfinger', '~> 2.0'
 gem 'oj', '~> 3.3'
 gem 'rabl', '~> 0.13'
+
+gem 'sidekiq', '~> 5.0'
+gem 'sidekiq-scheduler', '~> 2.1'
+gem 'sidekiq-unique-jobs', '~> 5.0'
+gem 'sidekiq-bulk', '~>0.1.1'

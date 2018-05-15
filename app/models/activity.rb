@@ -1,7 +1,7 @@
 class Activity < ApplicationRecord
   belongs_to :account, inverse_of: :activities
   belongs_to :object, polymorphic: true
-  belongs_to :articles, foreign_type: 'Articles', foreign_key: 'object_id', inverse_of: :activity
+  #belongs_to :articles, foreign_type: 'Articles', foreign_key: 'object_id', inverse_of: :activity
 
   before_validation :set_local
 
