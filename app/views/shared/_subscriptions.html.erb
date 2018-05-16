@@ -1,3 +1,6 @@
 <div class="col-sm-6 offset-sm-1 blog-sidebar">
   <h2>Your subscriptions</h2>
+  <% @account.following.each do |other_account| %>
+    <p><%= other_account.acct %><p>
+  <% end %>
 </div>

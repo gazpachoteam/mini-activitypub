@@ -26,7 +26,7 @@ class FollowService < BaseService
     if target_account.local?
       #NotifyService.new.call(target_account, follow_request)
     else
-      ActivityPub::DeliveryWorker.perform_async(build_json(follow), source_account.id, target_account.inbox_url)
+      ActivityPub::DeliveryWorker.new.perform(build_json(follow), source_account.id, target_account.inbox_url)
     end
 
     follow

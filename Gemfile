@@ -58,9 +58,17 @@ gem 'figaro'
 gem 'devise'
 gem 'cancancan', '~> 2.0'
 gem 'activitystreams', git: 'https://github.com/ortegacmanuel/activitystreams.git', branch: 'activitystreams2'
-gem 'goldfinger', '~> 2.0'
+#gem 'goldfinger', '~> 2.0'
+gem 'goldfinger', git: 'https://github.com/yoshimov/goldfinger.git', branch: 'ssl-error-retry'
 gem 'oj', '~> 3.3'
 gem 'rabl', '~> 0.13'
+
+gem 'json-ld-preloaded', '~> 2.2.1'
+gem 'rdf-normalize', '~> 0.3.1'
+
+gem 'active_model_serializers', '~> 0.10'
+
+gem 'link_header', '~> 0.0'
 
 gem 'sidekiq', '~> 5.0'
 gem 'sidekiq-scheduler', '~> 2.1'

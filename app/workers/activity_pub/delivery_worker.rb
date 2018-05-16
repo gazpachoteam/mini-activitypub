@@ -13,8 +13,8 @@ class ActivityPub::DeliveryWorker
     @inbox_url      = inbox_url
 
     perform_request
-
-    raise Mastodon::UnexpectedResponseError, @response unless response_successful?
+    byebug
+    raise Hanatachi::UnexpectedResponseError, @response unless response_successful?
 
     @response.connection&.close
     failure_tracker.track_success!

@@ -5,6 +5,7 @@ class FollowsController < ApplicationController
   authorize_resource
 
   def index
+    @account = current_account
   end
 
   def search
@@ -32,6 +33,8 @@ class FollowsController < ApplicationController
       username, domain = target_uri.split('@')
       @account         = Account.find_remote!(username, domain)
     end
+
+    redirect_to follows_path
   end
 
   private

@@ -1,0 +1,7 @@
+---
+:concurrency: 5
+:queues:
+  - default
+  - push
+  - pull
+  - mailers

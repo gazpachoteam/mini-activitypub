@@ -37,7 +37,7 @@ class Account < ApplicationRecord
 
   def to_webfinger_s
     "acct:#{local_username_and_domain}"
-  end  
+  end
 
   def keypair
     @keypair ||= OpenSSL::PKey::RSA.new(private_key || public_key)
@@ -52,6 +52,10 @@ class Account < ApplicationRecord
   #  self[:header_remote_url] = ''
   #  save!
   end
+
+  def object_type
+    :person
+  end  
 
   def to_param
     username
