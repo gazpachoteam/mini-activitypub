@@ -7,7 +7,7 @@ Hanatachi is a **free, open-source social network server** for **federated blogg
 Prerequisites: install git, Ruby 2.4.2, bundler gem, and MySQL (5.7.5+).
 
 ```bash
-git clone https://github.com/ortegacmanuel/hanatachi.git
+git clone https://gitlab.com/ortegacmanuel/hanatachi.git
 cd hanatachi
 bundle install
 cp config/application.yml.example config/application.yml
