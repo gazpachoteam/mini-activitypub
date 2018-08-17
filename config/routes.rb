@@ -33,6 +33,8 @@ Rails.application.routes.draw do
     resources :collections, only: [:show], module: :activitypub
   end
 
+  resource :inbox, only: [:create], module: :activitypub  
+
   # Webfinger
   get '.well-known/host-meta', to: 'well_known/host_meta#show', as: :host_meta, defaults: { format: 'xml' }
   get '.well-known/webfinger', to: 'well_known/webfinger#show', as: :webfinger

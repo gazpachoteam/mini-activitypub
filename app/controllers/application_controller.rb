@@ -18,4 +18,12 @@ class ApplicationController < ActionController::Base
   def https_enabled?
     Rails.env.production? && ENV['LOCAL_HTTPS'] == 'true'
   end
+
+  def set_cache_headers
+    response.headers['Vary'] = 'Accept'
+  end
+
+  def skip_session!
+    request.session_options[:skip] = true
+  end  
 end

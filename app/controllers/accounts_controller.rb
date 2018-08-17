@@ -10,21 +10,9 @@ class AccountsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        @pinned_statuses = []
+        @pinned_articles = []
 
-        if current_account && @account.blocking?(current_account)
-          @statuses = []
-          return
-        end
-
-        @pinned_statuses = cache_collection(@account.pinned_statuses, Status) if show_pinned_statuses?
-        @statuses        = filtered_status_page(params)
-        @statuses        = cache_collection(@statuses, Status)
-
-        unless @statuses.empty?
-          @older_url = older_url if @statuses.last.id > filtered_statuses.last.id
-          @newer_url = newer_url if @statuses.first.id < filtered_statuses.first.id
-        end
+        @articles = []
       end
 
       format.atom do
@@ -40,9 +28,7 @@ class AccountsController < ApplicationController
       format.json do
         skip_session!
 
-        render_cached_json(['activitypub', 'actor', @account.cache_key], content_type: 'application/activity+json') do
-          ActiveModelSerializers::SerializableResource.new(@account, serializer: ActivityPub::ActorSerializer, adapter: ActivityPub::Adapter)
-        end
+        render json: ActiveModelSerializers::SerializableResource.new(@account, serializer: ActivityPub::ActorSerializer, adapter: ActivityPub::Adapter).as_json
       end
     end
   end

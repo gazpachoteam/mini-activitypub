@@ -9,7 +9,6 @@ module AccountControllerConcern
     layout 'public'
     before_action :set_account
     before_action :set_link_headers
-    before_action :check_account_suspension
   end
 
   private
@@ -51,9 +50,5 @@ module AccountControllerConcern
 
   def webfinger_account_url
     webfinger_url(resource: @account.to_webfinger_s)
-  end
-
-  def check_account_suspension
-    gone if @account.suspended?
   end
 end
